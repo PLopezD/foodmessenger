@@ -109,7 +109,7 @@ function handleMessage(sender_psid, received_message) {
     } else {
       response = generateCarousel();
     }
-    
+
     currentUser['stepType'] = 'finish';
     userDB[sender_psid] = currentUser;
   } 
@@ -248,25 +248,34 @@ function generateCarousel() {
         "template_type":"generic",
         "elements":[
            {
-            "title":"Welcome!",
-            "image_url":"https://petersfancybrownhats.com/company_image.png",
+            "title":"Pizza",
+            "image_url":"https://www.qsrmagazine.com/sites/default/files/styles/story_page/public/PizzaHut.jpg",
             "subtitle":"We have the right hat for everyone.",
             "default_action": {
               "type": "web_url",
               "url": "https://petersfancybrownhats.com/view?item=103",
               "webview_height_ratio": "tall",
-            },
-            "buttons":[
-              {
-                "type":"web_url",
-                "url":"https://petersfancybrownhats.com",
-                "title":"View Website"
-              },{
-                "type":"postback",
-                "title":"Start Chatting",
-                "payload":"DEVELOPER_DEFINED_PAYLOAD"
-              }              
-            ]      
+            }
+          },
+          {
+            "title":"Hot dog",
+            "image_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hotdog_-_Evan_Swigart.jpg/1200px-Hotdog_-_Evan_Swigart.jpg",
+            "subtitle":"We have the right hat for everyone.",
+            "default_action": {
+              "type": "web_url",
+              "url": "https://petersfancybrownhats.com/view?item=103",
+              "webview_height_ratio": "tall",
+            }
+          },
+          {
+            "title":"Pizza",
+            "image_url":"https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "subtitle":"We have the right hat for everyone.",
+            "default_action": {
+              "type": "web_url",
+              "url": "https://petersfancybrownhats.com/view?item=103",
+              "webview_height_ratio": "tall",
+            }
           }
         ]
       }
