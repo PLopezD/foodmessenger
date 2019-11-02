@@ -1,25 +1,3 @@
-
-/**
- * Copyright 2017-present, Facebook, Inc. All rights reserved.
- *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * Messenger Platform Quick Start Tutorial
- *
- * This is the completed code for the Messenger Platform quick start tutorial
- *
- * https://developers.facebook.com/docs/messenger-platform/getting-started/quick-start/
- *
- * To run this code, you must do the following:
- *
- * 1. Deploy this code to a server running Node.js
- * 2. Run `npm install`
- * 3. Update the VERIFY_TOKEN
- * 4. Add your PAGE_ACCESS_TOKEN to your environment vars
- *
- */
-
 'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 // Imports dependencies and set up http server
@@ -123,9 +101,25 @@ function handlePostback(sender_psid, received_postback) {
   console.log("payload!", payload);
   // Set the response based on the postback payload
   if (payload === "GET_STARTED") {
-    response = startFlow();
+    console.log(12345);
+    let buttons = [
+      {
+        title:"Seeker",
+        payload: "SEEKER"
+      },
+      {
+        title:"Provider",
+        payload: "PROVIDER"
+      }
+    ]
+    response = genQuickReply("What are you?", buttons)
   }
 
+  if (payload === 'yes') {
+    response = { "text": "Thanks!" }
+  } else if (payload === 'no') {
+    response = { "text": "Oops, try sending another image." }
+  }
   callSendAPI(sender_psid, response);
 }
 
