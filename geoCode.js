@@ -1,3 +1,4 @@
+'use strict';
 const opencage = require('opencage-api-client');
 const geolib = require('geolib');
 
