@@ -75,17 +75,18 @@ app.get('/webhook', (req, res) => {
 
 function handleMessage(sender_psid, received_message) {
   let response;
-  // Checks if the message contains text
-  let commonGreetings = ["hi", "hello", "start" , "get started"]
-  if(commonGreetings.indexOf(received_message.text.toLowerCase()) >= 0 ) {
-    generateQuickReplies();
-  }
   if (received_message.text) {
     response = {
       "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
     }
   }
-
+  
+  let commonGreetings = ["hi", "hello", "start" , "get started"]
+  if(commonGreetings.indexOf(received_message.text.toLowerCase()) >= 0 ) {
+    console.log("common greeting entered");
+    
+    response = generateQuickReplies();
+  }
   if (received_message && received_message.quick_reply && received_message.quick_reply.payload === 'SEEKER') {
     response = userTypeSelected("SEEKER", sender_psid);
   } 
