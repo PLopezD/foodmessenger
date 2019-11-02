@@ -262,7 +262,7 @@ function generateCarousel() {
       }
     }
   }
-  _.forEach(item => {
+  _.forEach(providerDB, item => {
     let foodItem = {
       "title": item.foodDesc,
       "image_url":"https://www.qsrmagazine.com/sites/default/files/styles/story_page/public/PizzaHut.jpg",
