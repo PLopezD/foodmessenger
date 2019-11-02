@@ -286,14 +286,14 @@ function generateCarouselForDropoffs() {
         "template_type":"generic",
         "elements":[
           {
-            "title": "Sears tower",
-            "image_url":"https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-            "subtitle":`${_.random(1, 5)} miles away`
+            "title": "Dropoff location 1: Willis tower",
+            "image_url":"http://s3.amazonaws.com/architecture-org/files/buildings/willis-tower-sears-tower-01-ear-2.jpg",
+            "subtitle":`${_.random(1, 3)} miles away`
           }, 
           {
-          "title": "Millenium park",
-          "image_url":"http://s3.amazonaws.com/architecture-org/files/buildings/willis-tower-sears-tower-01-ear-2.jpg",
-          "subtitle":`${_.random(1, 5)} miles away`
+          "title": "Dropoff location 2: Millenium park",
+          "image_url":"https://i1.wp.com/chicagoonthecheap.com/lotc-cms/wp-content/uploads/The-Bean-Millennium-Park-LG.jpg?fit=800%2C1066&ssl=1",
+          "subtitle":`${_.random(3, 6)} miles away`
           }
         ]
       }
