@@ -80,7 +80,10 @@ function handleMessage(sender_psid, received_message) {
   }
   let currentUser = userDB[sender_psid];
   console.log(currentUser);
-  console.log(currentUser['type'])
+  if(currentUser){
+    console.log(currentUser['type'])
+  }
+  
   if(currentUser && currentUser['type'] == 'PROVIDER' && currentUser['stepType']== 'food'){
     console.log("Provider is in food step");
   }
