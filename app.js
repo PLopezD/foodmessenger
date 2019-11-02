@@ -70,6 +70,7 @@ app.get('/webhook', (req, res) => {
 
 function handleMessage(sender_psid, received_message) {
   let response;
+
   console.log("MESSAGE: ", received_message);
   if (received_message.nlp) {
     console.log("NLP: ", JSON.stringify(received_message.nlp));
@@ -88,10 +89,13 @@ function handleMessage(sender_psid, received_message) {
   }
   if (received_message && received_message.quick_reply && received_message.quick_reply.payload === 'SEEKER') {
     response = userTypeSelected("SEEKER", sender_psid);
+
   } 
   if (received_message && received_message.quick_reply && received_message.quick_reply.payload === 'PROVIDER') {
     response = userTypeSelected("PROVIDER", sender_psid);
   } 
+
+  console.log(userDB);
   
   // Send the response message
   callSendAPI(sender_psid, response);    
@@ -163,11 +167,13 @@ function genQuickReply(text, quickReplies) {
 }
 
 function userTypeSelected(type, psid) {
-  userDB[psid] = type;
-  console.log(userDB);
+  //userDB[psid] = {type:type};
+  
   if(type === 'PROVIDER'){
+    userDB[psid] = {type:type , stepType: "food"};
     return { "text": `What kind of food do you have?` }
   } else {
+    userDB[psid] = {type:type , stepType: "location"};
     return { "text": `What is your location?` }
   }
   
