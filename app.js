@@ -75,9 +75,6 @@ function handleMessage(sender_psid, received_message) {
   let response;
 
   console.log("MESSAGE: ", received_message);
-  if (received_message.nlp) {
-    console.log("NLP: ", JSON.stringify(received_message.nlp));
-  }
   let currentUser = userDB[sender_psid];
   //Provider in food step
   if(currentUser && currentUser['type'] == 'PROVIDER' && currentUser['stepType']== 'food'){
@@ -120,7 +117,12 @@ function handleMessage(sender_psid, received_message) {
   } 
   if (received_message && received_message.quick_reply && received_message.quick_reply.payload === 'PROVIDER') {
     response = userTypeSelected("PROVIDER", sender_psid);
-  } 
+  }  
+  if(response == ''){
+    response = {
+      "text": `Sorry ! We don't understand`
+    }
+  }
 
   console.log(userDB);
   console.log(providerDB);
