@@ -3,6 +3,7 @@ const opencage = require('opencage-api-client');
 const geolib = require('geolib');
 
 function geoDecode(x) {
+    console.log("Inside geoDecode" , x)
     let cArr = "";
     return opencage.geocode({q:x}).then(data => {
         //console.log(JSON.stringify(data))
@@ -27,6 +28,7 @@ function getLocation(locationOne, locationTwo) {
     cArray = [];
     cArray.push(geoDecode(locationOne), geoDecode(locationTwo))
     Promise.all(cArray).then(res => {
+        console.log("Response is : ",res);
         let distance=geolib.getDistance(
             { latitude: res[0].lat, longitude: res[0].lng },
             { latitude: res[1].lat, longitude: res[1].lng }
