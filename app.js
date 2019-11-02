@@ -105,9 +105,14 @@ function handleMessage(sender_psid, received_message) {
     }
   }
 
-  if (received_message.quick_reply.payload === 'SEEKER') {
+  if (received_message && received_message.quick_reply && received_message.quick_reply.payload === 'SEEKER') {
     response = startSeekerFlow()
   } 
+  
+  let commonGreetings = ["hi", "hello", "hey"]
+  if (commonGreetings.indexOf(payload.toLowerCase()) >=  0) {
+    response = startFlow();
+  }
   // Send the response message
   callSendAPI(sender_psid, response);    
 }
@@ -119,21 +124,10 @@ function handlePostback(sender_psid, received_postback) {
   let payload = received_postback.payload;
   console.log(payload);
   // Set the response based on the postback payload
-  let commonGreetings = ["hi", "hello", "hey"]
-  if (payload === "GET_STARTED" || commonGreetings.indexOf(payload.toLowerCase()) >=  0) {
-    let quickReplies = [
-      {
-        title:"Seeker",
-        payload: "SEEKER"
-      },
-      {
-        title:"Provider",
-        payload: "PROVIDER"
-      }
-    ]
-    response = genQuickReply("What are you?", quickReplies);
+  if (payload === "GET_STARTED") {
+    startFlow();
   }
-  
+
   callSendAPI(sender_psid, response);
 }
 
@@ -185,4 +179,17 @@ function genQuickReply(text, quickReplies) {
 function startSeekerFlow() {
   let response = { "text": "You are a seeker!" }
   return response;
+}
+function startFlow() {
+  let quickReplies = [
+    {
+      title:"Seeker",
+      payload: "SEEKER"
+    },
+    {
+      title:"Provider",
+      payload: "PROVIDER"
+    }
+  ]
+  response = genQuickReply("What are you?", quickReplies);
 }
