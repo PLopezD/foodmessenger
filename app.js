@@ -54,6 +54,14 @@ app.post('/webhook', (req, res) => {
 
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
+      if (webhook_event.postback) {
+        console.log("we are here");
+        
+        let response = {
+          "text": `xxxxx test`
+        }
+        handleMessage(sender_psid, response);        
+      }
       if (webhook_event.message) {
         handleMessage(sender_psid, webhook_event.message);        
       } else if (webhook_event.postback) {
@@ -183,6 +191,8 @@ function callSendAPI(sender_psid, response) {
     "method": "POST",
     "json": request_body
   }, (err, res, body) => {
+    console.log(res);
+    
     if (!err) {
       console.log('message sent!')
     } else {
