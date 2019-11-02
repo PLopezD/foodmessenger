@@ -86,7 +86,8 @@ app.get('/webhook', (req, res) => {
 
 function handleMessage(sender_psid, received_message) {
   let response; 
-  if (received_message == 'geolocate') {
+  if (received_message.text == 'geolocate') {
+    console.log("geolocate")
     getLocation("201 E Randolph Street Chicago, IL", "233 S Wacker Dr, Chicago, IL")
   }
 
