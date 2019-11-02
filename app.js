@@ -1,271 +1,185 @@
+
 /**
- * Copyright 2019-present, Facebook, Inc. All rights reserved.
+ * Copyright 2017-present, Facebook, Inc. All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
+ * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * Messenger For Original Coast Clothing
- * https://developers.facebook.com/docs/messenger-platform/getting-started/sample-apps/original-coast-clothing
+ * Messenger Platform Quick Start Tutorial
+ *
+ * This is the completed code for the Messenger Platform quick start tutorial
+ *
+ * https://developers.facebook.com/docs/messenger-platform/getting-started/quick-start/
+ *
+ * To run this code, you must do the following:
+ *
+ * 1. Deploy this code to a server running Node.js
+ * 2. Run `npm install`
+ * 3. Update the VERIFY_TOKEN
+ * 4. Add your PAGE_ACCESS_TOKEN to your environment vars
+ *
  */
 
-"use strict";
-console.log(1234);
-
+'use strict';
+const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 // Imports dependencies and set up http server
-const express = require("express"),
-  { urlencoded, json } = require("body-parser"),
-  crypto = require("crypto"),
-  path = require("path"),
-  Receive = require("./services/receive"),
-  GraphAPi = require("./services/graph-api"),
-  User = require("./services/user"),
-  config = require("./services/config"),
-  i18n = require("./i18n.config"),
-  app = express();
+const 
+  request = require('request'),
+  express = require('express'),
+  body_parser = require('body-parser'),
+  app = express().use(body_parser.json()); // creates express http server
 
-var users = {};
+// Sets server port and logs message on success
+app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
-// Parse application/x-www-form-urlencoded
-app.use(
-  urlencoded({
-    extended: true
-  })
-);
+// Accepts POST requests at /webhook endpoint
+app.post('/webhook', (req, res) => {  
 
-// Parse application/json. Verify that callback came from Facebook
-app.use(json({ verify: verifyRequestSignature }));
-
-// Serving static files in Express
-app.use(express.static(path.join(path.resolve(), "public")));
-
-// Set template engine in Express
-app.set("view engine", "ejs");
-
-// Respond with index file when a GET request is made to the homepage
-app.get("/", function(_req, res) {
-  res.render("index");
-});
-
-// Adds support for GET requests to our webhook
-app.get("/webhook", (req, res) => {
-  // Parse the query params
-  let mode = req.query["hub.mode"];
-  let token = req.query["hub.verify_token"];
-  let challenge = req.query["hub.challenge"];
-
-  // Checks if a token and mode is in the query string of the request
-  if (mode && token) {
-    // Checks the mode and token sent is correct
-    if (mode === "subscribe" && token === config.verifyToken) {
-      // Responds with the challenge token from the request
-      console.log("WEBHOOK_VERIFIED");
-      res.status(200).send(challenge);
-    } else {
-      // Responds with '403 Forbidden' if verify tokens do not match
-      res.sendStatus(403);
-    }
-  }
-});
-
-// Creates the endpoint for your webhook
-app.post("/webhook", (req, res) => {
+  // Parse the request body from the POST
   let body = req.body;
 
-  // Checks if this is an event from a page subscription
-  if (body.object === "page") {
-    // Returns a '200 OK' response to all requests
-    res.status(200).send("EVENT_RECEIVED");
+  // Check the webhook event is from a Page subscription
+  if (body.object === 'page') {
 
-    // Iterates over each entry - there may be multiple if batched
     body.entry.forEach(function(entry) {
-      if ("changes" in entry) {
-        // Handle Page Changes event
-        let receiveMessage = new Receive();
-        if (entry.changes[0].field === "feed") {
-          let change = entry.changes[0].value;
-          switch (change.item) {
-            case "post":
-              return receiveMessage.handlePrivateReply(
-                "post_id",
-                change.post_id
-              );
-              break;
-            case "comment":
-              return receiveMessage.handlePrivateReply(
-                "commentgity _id",
-                change.comment_id
-              );
-              break;
-            default:
-              console.log('Unsupported feed change type.');
-              return;
-          }
-        }
-      }
 
       // Gets the body of the webhook event
-      let webhookEvent = entry.messaging[0];
-      // console.log(webhookEvent);
+      let webhook_event = entry.messaging[0];
+      console.log(webhook_event);
 
-      // Discard uninteresting events
-      if ("read" in webhookEvent) {
-        // console.log("Got a read event");
-        return;
-      }
-
-      if ("delivery" in webhookEvent) {
-        // console.log("Got a delivery event");
-        return;
-      }
 
       // Get the sender PSID
-      let senderPsid = webhookEvent.sender.id;
+      let sender_psid = webhook_event.sender.id;
+      console.log('Sender ID: ' + sender_psid);
 
-      if (!(senderPsid in users)) {
-        let user = new User(senderPsid);
-
-        GraphAPi.getUserProfile(senderPsid)
-          .then(userProfile => {
-            user.setProfile(userProfile);
-          })
-          .catch(error => {
-            // The profile is unavailable
-            console.log("Profile is unavailable:", error);
-          })
-          .finally(() => {
-            users[senderPsid] = user;
-            i18n.setLocale(user.locale);
-            console.log(
-              "New Profile PSID:",
-              senderPsid,
-              "with locale:",
-              i18n.getLocale()
-            );
-            let receiveMessage = new Receive(users[senderPsid], webhookEvent);
-            return receiveMessage.handleMessage();
-          });
-      } else {
-        i18n.setLocale(users[senderPsid].locale);
-        console.log(
-          "Profile already exists PSID:",
-          senderPsid,
-          "with locale:",
-          i18n.getLocale()
-        );
-        let receiveMessage = new Receive(users[senderPsid], webhookEvent);
-        return receiveMessage.handleMessage();
+      // Check if the event is a message or postback and
+      // pass the event to the appropriate handler function
+      if (webhook_event.message) {
+        handleMessage(sender_psid, webhook_event.message);        
+      } else if (webhook_event.postback) {
+        
+        handlePostback(sender_psid, webhook_event.postback);
       }
+      
     });
+    // Return a '200 OK' response to all events
+    res.status(200).send('EVENT_RECEIVED');
+
   } else {
-    // Returns a '404 Not Found' if event is not from a page subscription
+    // Return a '404 Not Found' if event is not from a page subscription
     res.sendStatus(404);
   }
+
 });
 
-// Set up your App's Messenger Profile
-app.get("/profile", (req, res) => {
-  let token = req.query["verify_token"];
-  let mode = req.query["mode"];
-
-  if (!config.webhookUrl.startsWith("https://")) {
-    res.status(200).send("ERROR - Need a proper API_URL in the .env file");
-  }
-  var Profile = require("./services/profile.js");
-  Profile = new Profile();
-
-  // Checks if a token and mode is in the query string of the request
+// Accepts GET requests at the /webhook endpoint
+app.get('/webhook', (req, res) => {
+  
+  /** UPDATE YOUR VERIFY TOKEN **/
+  const VERIFY_TOKEN = "<YOUR VERIFY TOKEN>";
+  
+  // Parse params from the webhook verification request
+  let mode = req.query['hub.mode'];
+  let token = req.query['hub.verify_token'];
+  let challenge = req.query['hub.challenge'];
+    
+  // Check if a token and mode were sent
   if (mode && token) {
-    if (token === config.verifyToken) {
-      if (mode == "webhook" || mode == "all") {
-        Profile.setWebhook();
-        res.write(
-          `<p>Set app ${config.appId} call to ${config.webhookUrl}</p>`
-        );
-      }
-      if (mode == "profile" || mode == "all") {
-        Profile.setThread();
-        res.write(`<p>Set Messenger Profile of Page ${config.pageId}</p>`);
-      }
-      if (mode == "personas" || mode == "all") {
-        Profile.setPersonas();
-        res.write(`<p>Set Personas for ${config.appId}</p>`);
-        res.write(
-          "<p>To persist the personas, add the following variables \
-          to your environment variables:</p>"
-        );
-        res.write("<ul>");
-        res.write(`<li>PERSONA_BILLING = ${config.personaBilling.id}</li>`);
-        res.write(`<li>PERSONA_CARE = ${config.personaCare.id}</li>`);
-        res.write(`<li>PERSONA_ORDER = ${config.personaOrder.id}</li>`);
-        res.write(`<li>PERSONA_SALES = ${config.personaSales.id}</li>`);
-        res.write("</ul>");
-      }
-      if (mode == "nlp" || mode == "all") {
-        GraphAPi.callNLPConfigsAPI();
-        res.write(`<p>Enable Built-in NLP for Page ${config.pageId}</p>`);
-      }
-      if (mode == "domains" || mode == "all") {
-        Profile.setWhitelistedDomains();
-        res.write(`<p>Whitelisting domains: ${config.whitelistedDomains}</p>`);
-      }
-      if (mode == "private-reply") {
-        Profile.setPageFeedWebhook();
-        res.write(`<p>Set Page Feed Webhook for Private Replies.</p>`);
-      }
-      res.status(200).end();
+  
+    // Check the mode and token sent are correct
+    if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+      
+      // Respond with 200 OK and challenge token from the request
+      console.log('WEBHOOK_VERIFIED');
+      res.status(200).send(challenge);
+    
     } else {
       // Responds with '403 Forbidden' if verify tokens do not match
-      res.sendStatus(403);
+      res.sendStatus(403);      
     }
-  } else {
-    // Returns a '404 Not Found' if mode or token are missing
-    res.sendStatus(404);
   }
 });
 
-// Verify that the callback came from Facebook.
-function verifyRequestSignature(req, res, buf) {
-  var signature = req.headers["x-hub-signature"];
-
-  if (!signature) {
-    console.log("Couldn't validate the signature.");
-  } else {
-    var elements = signature.split("=");
-    var signatureHash = elements[1];
-    var expectedHash = crypto
-      .createHmac("sha1", config.appSecret)
-      .update(buf)
-      .digest("hex");
-    if (signatureHash != expectedHash) {
-      throw new Error("Couldn't validate the request signature.");
+function handleMessage(sender_psid, received_message) {
+  let response;
+  
+  // Checks if the message contains text
+  if (received_message.text) {    
+    // Create the payload for a basic text message, which
+    // will be added to the body of our request to the Send API
+    response = {
+      "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
     }
-  }
+  } else if (received_message.attachments) {
+    // Get the URL of the message attachment
+    let attachment_url = received_message.attachments[0].payload.url;
+    response = {
+      "attachment": {
+        "type": "template",
+        "payload": {
+          "template_type": "generic",
+          "elements": [{
+            "title": "Is this the right picture?",
+            "subtitle": "Tap a button to answer.",
+            "image_url": attachment_url,
+            "buttons": [
+              {
+                "type": "postback",
+                "title": "Yes!",
+                "payload": "yes",
+              },
+              {
+                "type": "postback",
+                "title": "No!",
+                "payload": "no",
+              }
+            ],
+          }]
+        }
+      }
+    }
+  } 
+  
+  // Send the response message
+  callSendAPI(sender_psid, response);    
 }
 
-// Check if all environment variables are set
-config.checkEnvVariables();
+function handlePostback(sender_psid, received_postback) {
+  console.log('ok')
+   let response;
+  // Get the payload for the postback
+  let payload = received_postback.payload;
 
-// listen for requests :)
-var listener = app.listen(config.port, function() {
-  console.log("Your app is listening on port " + listener.address().port);
+  // Set the response based on the postback payload
+  if (payload === 'yes') {
+    response = { "text": "Thanks!" }
+  } else if (payload === 'no') {
+    response = { "text": "Oops, try sending another image." }
+  }
+  // Send the message to acknowledge the postback
+  callSendAPI(sender_psid, response);
+}
 
-  if (
-    Object.keys(config.personas).length == 0 &&
-    config.appUrl &&
-    config.verifyToken
-  ) {
-    console.log(
-      "Is this the first time running?\n" +
-        "Make sure to set the both the Messenger profile, persona " +
-        "and webhook by visiting:\n" +
-        config.appUrl +
-        "/profile?mode=all&verify_token=" +
-        config.verifyToken
-    );
+function callSendAPI(sender_psid, response) {
+  // Construct the message body
+  let request_body = {
+    "recipient": {
+      "id": sender_psid
+    },
+    "message": response
   }
 
-  if (config.pageId) {
-    console.log("Test your app by messaging:");
-    console.log("https://m.me/" + config.pageId);
-  }
-});
+  // Send the HTTP request to the Messenger Platform
+  request({
+    "uri": "https://graph.facebook.com/v2.6/me/messages",
+    "qs": { "access_token": PAGE_ACCESS_TOKEN },
+    "method": "POST",
+    "json": request_body
+  }, (err, res, body) => {
+    if (!err) {
+      console.log('message sent!')
+    } else {
+      console.error("Unable to send message:" + err);
+    }
+  }); 
+}
