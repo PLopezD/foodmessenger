@@ -86,9 +86,9 @@ app.get('/webhook', (req, res) => {
 
 function handleMessage(sender_psid, received_message) {
   let response; 
-  // if (received_message == 'geolocate') {
-  //   getLocation("201 E Randolph Street Chicago, IL", "233 S Wacker Dr, Chicago, IL")
-  // }
+  if (received_message == 'geolocate') {
+    getLocation("201 E Randolph Street Chicago, IL", "233 S Wacker Dr, Chicago, IL")
+  }
 
   console.log("MESSAGE: ", received_message);
   let currentUser = userDB[sender_psid];
