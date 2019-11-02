@@ -1,6 +1,9 @@
 'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 let userDB = {}
+let providerDB ={}
+let seekerDB = {}
+
 // Imports dependencies and set up http server
 const 
   request = require('request'),
@@ -74,6 +77,10 @@ function handleMessage(sender_psid, received_message) {
   console.log("MESSAGE: ", received_message);
   if (received_message.nlp) {
     console.log("NLP: ", JSON.stringify(received_message.nlp));
+  }
+  let currentUser = userDB[sender_psid];
+  if(currentUser && currentUser['type'] == 'PROVIDER' && currentUser['stepType']== 'food'){
+    console.log("Provider is in food step");
   }
   if (received_message.text) {
     response = {
