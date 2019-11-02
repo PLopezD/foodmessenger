@@ -109,7 +109,7 @@ function handleMessage(sender_psid, received_message) {
     providerDetails['location'] = received_message.text;
     console.log("Provider is in location step");
     response = generateCarouselForDropoffs();
-
+    callSendAPI(sender_psid, {"text": `These are the available food drop off locations near you. Please visit at your convenience.`})
     currentUser['stepType'] = 'finish';
     userDB[sender_psid] = currentUser;
   }
