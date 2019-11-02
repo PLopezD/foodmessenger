@@ -85,7 +85,6 @@ function handleMessage(sender_psid, received_message) {
 
   if (received_message && received_message.quick_reply && received_message.quick_reply.payload === 'SEEKER') {
     console.log("xxxx");
-    
     response = startSeekerFlow()
   } 
   
@@ -102,17 +101,7 @@ function handlePostback(sender_psid, received_postback) {
   // Set the response based on the postback payload
   if (payload === "GET_STARTED") {
     console.log(12345);
-    let quickReplies = [
-      {
-        title:"Seeker",
-        payload: "SEEKER"
-      },
-      {
-        title:"Provider",
-        payload: "PROVIDER"
-      }
-    ]
-    response = genQuickReply("What are you?", quickReplies);
+    response = startSeekerFlow();
     console.log(6);
     
   }
@@ -172,4 +161,18 @@ function genQuickReply(text, quickReplies) {
   }
 
   return response;
+}
+
+function startSeekerFlow() {
+  let quickReplies = [
+    {
+      title:"Seeker",
+      payload: "SEEKER"
+    },
+    {
+      title:"Provider",
+      payload: "PROVIDER"
+    }
+  ]
+  return genQuickReply("What are you?", quickReplies)
 }
