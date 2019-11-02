@@ -71,6 +71,9 @@ app.get('/webhook', (req, res) => {
 function handleMessage(sender_psid, received_message) {
   let response;
   console.log("MESSAGE: ", received_message);
+  if (received_message.nlp) {
+    console.log("NLP: ", received_message.nlp.entities.sentiment);
+  }
   if (received_message.text) {
     response = {
       "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
