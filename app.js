@@ -79,10 +79,28 @@ function handleMessage(sender_psid, received_message) {
     console.log("NLP: ", JSON.stringify(received_message.nlp));
   }
   let currentUser = userDB[sender_psid];
+  //Provider in food step
   if(currentUser && currentUser['type'] == 'PROVIDER' && currentUser['stepType']== 'food'){
     //arp
     providerDB[sender_psid] = {foodDesc: received_message.text ,location: ""};
     console.log("Provider is in food step");
+    response = {
+      "text": `Great ! What's your location ?`
+    }
+    currentUser['stepType'] = 'location';
+    userDB[sender_psid] = currentUser;
+  }
+  //Provider in location step
+  if(currentUser && currentUser['type'] == 'PROVIDER' && currentUser['stepType']== 'location'){
+    //arp
+    let providerDetails = providerDB[sender_psid];
+    providerDetails['location'] = received_message.text;
+    console.log("Provider is in location step");
+    response = {
+      "text": `Thank you for providing the details. We will let the seekers know !`
+    }
+    currentUser['stepType'] = 'finish';
+    userDB[sender_psid] = currentUser;
   }
   if (received_message.text) {
     response = {
