@@ -2,7 +2,16 @@
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 let _ = require('lodash');
 let userDB = {}
-let providerDB ={}
+let providerDB = {
+  1234: {
+    foodDesc: "3 pizzas", 
+    location: "22 wacker"
+  },
+  4567: {
+    foodDesc: "20 bagels", 
+    location: "88 division"
+  }
+}
 let seekerDB = {}
 
 // Imports dependencies and set up http server
@@ -247,13 +256,13 @@ function generateCarousel() {
       "type":"template",
       "payload":{
         "template_type":"generic",
-        "elements":[
-        ]
+        "elements":[]
       }
     }
   }
   _.forEach(item => {
-    let footItem = {
+    console.log(item);
+    let foodItem = {
       "title": item.foodDesc,
       "image_url":"https://www.qsrmagazine.com/sites/default/files/styles/story_page/public/PizzaHut.jpg",
       "subtitle":`${item.location} - ${_.random(1, 5)} miles`,
@@ -263,7 +272,10 @@ function generateCarousel() {
         "webview_height_ratio": "tall",
       }
     }
-    returnObj.attachment.payload.elements.push(footItem)
+    console.log(foodItem);
+    returnObj.attachment.payload.elements.push(foodItem)
   })
+  console.log(returnObj);
+  
   return returnObj
 }
