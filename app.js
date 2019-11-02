@@ -79,6 +79,8 @@ function handleMessage(sender_psid, received_message) {
     console.log("NLP: ", JSON.stringify(received_message.nlp));
   }
   let currentUser = userDB[sender_psid];
+  console.log(currentUser);
+  console.log(currentUser['type'])
   if(currentUser && currentUser['type'] == 'PROVIDER' && currentUser['stepType']== 'food'){
     console.log("Provider is in food step");
   }
