@@ -2,10 +2,10 @@
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 let _ = require('lodash');
 let getLocation = require('./geoCode');
-let
+//let
 
 
-let userDB = {}
+//let userDB = {}
 let providerDB = {
   1234: {
     foodDesc: "3 pizzas", 
