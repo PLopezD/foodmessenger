@@ -138,7 +138,7 @@ function handleMessage(sender_psid, received_message) {
 
 function handlePostback(sender_psid, received_postback) {
   console.log('ok')
-  let response;
+  let response = { "text": "We don't understand!" };
   // Get the payload for the postback
   let payload = received_postback.payload;
   console.log(payload);
@@ -160,9 +160,8 @@ function handlePostback(sender_psid, received_postback) {
 
   if (payload === 'SEEKER') {
     response = startSeekerFlow()
-  } else {
-    response = { "text": "We don't understand!" }
-  }
+  } 
+  
   callSendAPI(sender_psid, response);
 }
 
