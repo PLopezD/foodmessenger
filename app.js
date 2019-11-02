@@ -117,7 +117,9 @@ function handleMessage(sender_psid, received_message) {
         "text": `Thank you for providing your location! Currently there are no food providers available!`
       }
     } else {
+      console.log("before");
       response = generateCarousel();
+      console.log("after", response);
     }
 
     currentUser['stepType'] = 'finish';
@@ -261,7 +263,6 @@ function generateCarousel() {
     }
   }
   _.forEach(item => {
-    console.log(item);
     let foodItem = {
       "title": item.foodDesc,
       "image_url":"https://www.qsrmagazine.com/sites/default/files/styles/story_page/public/PizzaHut.jpg",
@@ -272,10 +273,7 @@ function generateCarousel() {
         "webview_height_ratio": "tall",
       }
     }
-    console.log(foodItem);
     returnObj.attachment.payload.elements.push(foodItem)
   })
-  console.log(returnObj);
-  
   return returnObj
 }
