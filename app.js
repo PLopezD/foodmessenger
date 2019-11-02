@@ -166,7 +166,12 @@ function genQuickReply(text, quickReplies) {
 function userTypeSelected(type, psid) {
   userDB[psid] = type;
   console.log(userDB);
-  return { "text": `You've selected ${type}. What is your location?` }
+  if(type === 'PROVIDER'){
+    return { "text": `What kind of food do you have?` }
+  } else {
+    return { "text": `What is your location?` }
+  }
+  
 }
 
 function generateQuickReplies() {
