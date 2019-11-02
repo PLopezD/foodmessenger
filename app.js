@@ -1,5 +1,6 @@
 'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
+let userDB = {}
 // Imports dependencies and set up http server
 const 
   request = require('request'),
@@ -76,16 +77,16 @@ function handleMessage(sender_psid, received_message) {
   let response;
   // Checks if the message contains text
   if (received_message.text) {
-    // Create the payload for a basic text message, which
-    // will be added to the body of our request to the Send API
     response = {
       "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
     }
   }
 
   if (received_message && received_message.quick_reply && received_message.quick_reply.payload === 'SEEKER') {
-    console.log("xxxx");
-    response = startSeekerFlow()
+    response = userTypeSelected("SEEKER", sender_psid);
+  } 
+  if (received_message && received_message.quick_reply && received_message.quick_reply.payload === 'PROVIDER') {
+    response = userTypeSelected("PROVIDER", sender_psid);
   } 
   
   // Send the response message
@@ -101,9 +102,7 @@ function handlePostback(sender_psid, received_postback) {
   // Set the response based on the postback payload
   if (payload === "GET_STARTED") {
     console.log(12345);
-    response = startSeekerFlow();
-    console.log(6);
-    
+    response = generateQuickReplies();
   }
 
   if (payload === 'yes') {
@@ -111,9 +110,7 @@ function handlePostback(sender_psid, received_postback) {
   } else if (payload === 'no') {
     response = { "text": "Oops, try sending another image." }
   }
-  console.log(7);
   callSendAPI(sender_psid, response);
-  console.log(8);
 }
 
 function callSendAPI(sender_psid, response) {
@@ -135,8 +132,6 @@ function callSendAPI(sender_psid, response) {
     "method": "POST",
     "json": request_body
   }, (err, res, body) => {
-    console.log(res);
-    
     if (!err) {
       console.log('message sent!')
     } else {
@@ -163,7 +158,13 @@ function genQuickReply(text, quickReplies) {
   return response;
 }
 
-function startSeekerFlow() {
+function userTypeSelected(type, psid) {
+  userDB[psid] = type;
+  console.log(userDB);
+  return { "text": `You've selected ${type}. What is your location?` }
+}
+
+function generateQuickReplies() {
   let quickReplies = [
     {
       title:"Seeker",
