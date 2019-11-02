@@ -279,8 +279,8 @@ function generateCarousel() {
 
 function generateCarouselForDropoffs() {
   return {
-    "text": "There are 12 people in your neighborhood who are actively in need of food. These are your dropoff locations.",
     "attachment":{
+      
       "type":"template",
       "payload":{
         "template_type":"generic",
