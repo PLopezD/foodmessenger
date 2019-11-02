@@ -270,6 +270,8 @@ function generateCarousel() {
   }
 
   _.forEach(providerDB, (item, index) => {
+    console.log(index);
+    
     let image_url = "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
     if (index == 0 ) {
       image_url = "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&w=1000&q=80"
