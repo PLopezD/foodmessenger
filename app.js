@@ -102,12 +102,20 @@ function handleMessage(sender_psid, received_message) {
   if(currentUser && currentUser['type'] == 'SEEKER' && currentUser['stepType']== 'location'){
     //arp
     seekerDB[sender_psid] = {location: received_message.text};
-    response = {
-      "text": `Thankyou for providing your location !`
+    if(Object.keys(providerDB).length == 0){
+      response = {
+      "text": `Thankyou for providing your location ! Currently there are no food providers available ! `
+      }
+    } else {
+      response = {
+      "text": `Thankyou for providing your location ! The following food providers are near you : `
+      }
     }
+    
     currentUser['stepType'] = 'finish';
     userDB[sender_psid] = currentUser;
   } 
+
 
   // if (received_message.text) {
   //   response = {
