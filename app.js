@@ -86,9 +86,7 @@ function handleMessage(sender_psid, received_message) {
     }
     currentUser['stepType'] = 'location';
     userDB[sender_psid] = currentUser;
-  }
-  //Provider in location step
-  if(currentUser && currentUser['type'] == 'PROVIDER' && currentUser['stepType']== 'location'){
+  } else if(currentUser && currentUser['type'] == 'PROVIDER' && currentUser['stepType']== 'location'){
     //arp
     let providerDetails = providerDB[sender_psid];
     providerDetails['location'] = received_message.text;
