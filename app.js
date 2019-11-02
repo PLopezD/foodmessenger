@@ -99,18 +99,16 @@ function handleMessage(sender_psid, received_message) {
     providerDB[sender_psid] = {foodDesc: received_message.text ,location: ""};
     console.log("Provider is in food step");
     response = {
-      "text": `Great ! What's your location ?`
+      "text": `Great! What's your location?`
     }
     currentUser['stepType'] = 'location';
     userDB[sender_psid] = currentUser;
-  } else if(currentUser && currentUser['type'] == 'PROVIDER' && currentUser['stepType']== 'location'){
+  } else if (currentUser && currentUser['type'] == 'PROVIDER' && currentUser['stepType']== 'location'){
     //arp
     let providerDetails = providerDB[sender_psid];
     providerDetails['location'] = received_message.text;
     console.log("Provider is in location step");
-    response = {
-      "text": `Thank you for providing the details. We will let the seekers know !`
-    }
+    response = generateCarouselForDropoffs();
     currentUser['stepType'] = 'finish';
     userDB[sender_psid] = currentUser;
   }
@@ -255,7 +253,7 @@ function generateQuickReplies() {
       payload: "PROVIDER"
     }
   ]
-  return genQuickReply("How would you describe yourself ?", quickReplies)
+  return genQuickReply("How would you describe yourself?", quickReplies)
 }
 
 function generateCarousel() {
@@ -277,4 +275,27 @@ function generateCarousel() {
     returnObj.attachment.payload.elements.push(foodItem)
   })
   return returnObj
+}
+
+function generateCarouselForDropoffs() {
+  let returnObj = {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"generic",
+        "elements":[
+          {
+            "title": "Sears tower",
+            "image_url":"https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            "subtitle":`${item.location} - ${_.random(1, 5)} miles`
+          }, 
+          {
+          "title": "Millenium park",
+          "image_url":"http://s3.amazonaws.com/architecture-org/files/buildings/willis-tower-sears-tower-01-ear-2.jpg",
+          "subtitle":`${item.location} - ${_.random(1, 5)} miles`
+          }
+        ]
+      }
+    }
+  }
 }
