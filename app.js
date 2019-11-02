@@ -102,8 +102,8 @@ function handleMessage(sender_psid, received_message) {
       "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
     }
   }
-  
-  if (received_message.payload === 'SEEKER') {
+  let payload = received_message.payload
+  if (payload === 'SEEKER') {
     response = startSeekerFlow()
   } 
 
@@ -120,7 +120,7 @@ function handlePostback(sender_psid, received_postback) {
   let response = { "text": "We don't understand!" };
   // Get the payload for the postback
   let payload = received_postback.payload;
-  console.log(payload);
+  console.log("payload!", payload);
   // Set the response based on the postback payload
   if (payload === "GET_STARTED") {
     response = startFlow();
