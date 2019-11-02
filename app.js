@@ -108,7 +108,7 @@ function handleMessage(sender_psid, received_message) {
   if (received_message && received_message.quick_reply && received_message.quick_reply.payload === 'SEEKER') {
     response = startSeekerFlow()
   } 
-  
+
   let commonGreetings = ["hi", "hello", "hey"]
   if (commonGreetings.indexOf(payload.toLowerCase()) >=  0) {
     response = startFlow();
@@ -180,6 +180,7 @@ function startSeekerFlow() {
   let response = { "text": "You are a seeker!" }
   return response;
 }
+
 function startFlow() {
   let quickReplies = [
     {
@@ -191,5 +192,5 @@ function startFlow() {
       payload: "PROVIDER"
     }
   ]
-  response = genQuickReply("What are you?", quickReplies);
+  return genQuickReply("What are you?", quickReplies);
 }
