@@ -1,3 +1,25 @@
+
+/**
+ * Copyright 2017-present, Facebook, Inc. All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * Messenger Platform Quick Start Tutorial
+ *
+ * This is the completed code for the Messenger Platform quick start tutorial
+ *
+ * https://developers.facebook.com/docs/messenger-platform/getting-started/quick-start/
+ *
+ * To run this code, you must do the following:
+ *
+ * 1. Deploy this code to a server running Node.js
+ * 2. Run `npm install`
+ * 3. Update the VERIFY_TOKEN
+ * 4. Add your PAGE_ACCESS_TOKEN to your environment vars
+ *
+ */
+
 'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 // Imports dependencies and set up http server
@@ -12,7 +34,8 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
-  console.log("Starting!");
+  console.log("xxxxxxxxxxx");
+  
   // Parse the request body from the POST
   let body = req.body;
 
@@ -24,6 +47,8 @@ app.post('/webhook', (req, res) => {
       console.log('Sender ID: ' + sender_psid);
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
+      console.log(Boolean(webhook_event.message));
+      console.log(Boolean(webhook_event.postback));
       if (webhook_event.message) {
         handleMessage(sender_psid, webhook_event.message);        
       } else if (webhook_event.postback) {
@@ -70,8 +95,7 @@ app.get('/webhook', (req, res) => {
 });
 
 function handleMessage(sender_psid, received_message) {
-  let response = { "text": "We don't understand!!" };
-  console.log("received_message!", received_message);
+  let response;
   // Checks if the message contains text
   if (received_message.text) {
     // Create the payload for a basic text message, which
@@ -79,30 +103,50 @@ function handleMessage(sender_psid, received_message) {
     response = {
       "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
     }
-  }
-  let payload = received_message.payload
-  if (payload === 'SEEKER') {
-    response = startSeekerFlow()
+  } else if (received_message.attachments) {
+    // Get the URL of the message attachment
+    let attachment_url = received_message.attachments[0].payload.url;
+    response = {
+      "attachment": {
+        "type": "template",
+        "payload": {
+          "template_type": "generic",
+          "elements": [{
+            "title": "Is this the right picture?",
+            "subtitle": "Tap a button to answer.",
+            "image_url": attachment_url,
+            "buttons": [
+              {
+                "type": "postback",
+                "title": "Yes!",
+                "payload": "yes",
+              },
+              {
+                "type": "postback",
+                "title": "No!",
+                "payload": "no",
+              }
+            ],
+          }]
+        }
+      }
+    }
   } 
-
-  let commonGreetings = ["hi", "hello", "hey"]
-  if (commonGreetings.indexOf(payload.toLowerCase()) >=  0) {
-    response = startFlow();
-  }
+  
   // Send the response message
   callSendAPI(sender_psid, response);    
 }
 
 function handlePostback(sender_psid, received_postback) {
   console.log('ok')
-  let response = { "text": "We don't understand!" };
+   let response;
   // Get the payload for the postback
   let payload = received_postback.payload;
-  console.log("payload!", payload);
+  console.log(payload);
   // Set the response based on the postback payload
   if (payload === "GET_STARTED") {
     console.log(12345);
-    let buttons = [
+    let quickReplies = [
       {
         title:"Seeker",
         payload: "SEEKER"
@@ -112,7 +156,9 @@ function handlePostback(sender_psid, received_postback) {
         payload: "PROVIDER"
       }
     ]
-    response = genQuickReply("What are you?", buttons)
+    response = genQuickReply("What are you?", quickReplies);
+    console.log(6);
+    
   }
 
   if (payload === 'yes') {
@@ -120,7 +166,9 @@ function handlePostback(sender_psid, received_postback) {
   } else if (payload === 'no') {
     response = { "text": "Oops, try sending another image." }
   }
+  console.log(7);
   callSendAPI(sender_psid, response);
+  console.log(8);
 }
 
 function callSendAPI(sender_psid, response) {
@@ -131,6 +179,10 @@ function callSendAPI(sender_psid, response) {
     },
     "message": response
   }
+
+  console.log(request_body);
+  
+  
   // Send the HTTP request to the Messenger Platform
   request({
     "uri": "https://graph.facebook.com/v2.6/me/messages",
@@ -138,6 +190,8 @@ function callSendAPI(sender_psid, response) {
     "method": "POST",
     "json": request_body
   }, (err, res, body) => {
+    console.log(res);
+    
     if (!err) {
       console.log('message sent!')
     } else {
@@ -162,23 +216,4 @@ function genQuickReply(text, quickReplies) {
   }
 
   return response;
-}
-
-function startSeekerFlow() {
-  let response = { "text": "You are a seeker!" }
-  return response;
-}
-
-function startFlow() {
-  let quickReplies = [
-    {
-      title:"Seeker",
-      payload: "SEEKER"
-    },
-    {
-      title:"Provider",
-      payload: "PROVIDER"
-    }
-  ]
-  return genQuickReply("What are you?", quickReplies);
 }
