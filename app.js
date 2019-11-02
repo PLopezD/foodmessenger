@@ -42,7 +42,6 @@ app.post('/webhook', (req, res) => {
   if (body.object === 'page') {
     body.entry.forEach(function(entry) {
       let webhook_event = entry.messaging[0];
-      console.log(webhook_event);
       let sender_psid = webhook_event.sender.id;
       console.log('Sender ID: ' + sender_psid);
       // Check if the event is a message or postback and
@@ -97,15 +96,6 @@ app.get('/webhook', (req, res) => {
 function handleMessage(sender_psid, received_message) {
   let response;
   // Checks if the message contains text
-  console.log("RECEIVED!!!!", received_message);
-  console.log(received_message.postback.payload);
-  if (received_message.postback.payload === "GET_STARTED") {
-    console.log(12345);
-    response = {
-      "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
-    }
-  }
-
   if (received_message.text) {
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
@@ -151,8 +141,14 @@ function handlePostback(sender_psid, received_postback) {
    let response;
   // Get the payload for the postback
   let payload = received_postback.payload;
-
+  console.log(payload);
   // Set the response based on the postback payload
+  if (payload === "GET_STARTED") {
+    console.log(12345);
+    response = {
+      "text": `GETTING STARTED FLOW GOES HERE`
+    }
+  }
   if (payload === 'yes') {
     response = { "text": "Thanks!" }
   } else if (payload === 'no') {
