@@ -266,12 +266,7 @@ function generateCarousel() {
     let foodItem = {
       "title": item.foodDesc,
       "image_url":"https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-      "subtitle":`${item.location} - ${_.random(1, 5)} miles`,
-      "default_action": {
-        "type": "web_url",
-        "url": "",
-        "webview_height_ratio": "tall",
-      }
+      "subtitle":`${item.location} - ${_.random(1, 5)} miles`
     }
     returnObj.attachment.payload.elements.push(foodItem)
   })
