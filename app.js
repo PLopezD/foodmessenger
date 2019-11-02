@@ -9,6 +9,7 @@
  */
 
 "use strict";
+console.log(1234);
 
 // Imports dependencies and set up http server
 const express = require("express"),
