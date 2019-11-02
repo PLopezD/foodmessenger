@@ -145,7 +145,7 @@ function handlePostback(sender_psid, received_postback) {
   // Set the response based on the postback payload
   if (payload === "GET_STARTED") {
     console.log(12345);
-    let buttons = [
+    let quickReplies = [
       {
         title:"Seeker",
         payload: "SEEKER"
@@ -155,7 +155,9 @@ function handlePostback(sender_psid, received_postback) {
         payload: "PROVIDER"
       }
     ]
-    let response = genQuickReply("What are you?", buttons)
+    let response = genQuickReply("What are you?", quickReplies);
+    console.log(6);
+    
   }
 
   if (payload === 'yes') {
@@ -163,7 +165,9 @@ function handlePostback(sender_psid, received_postback) {
   } else if (payload === 'no') {
     response = { "text": "Oops, try sending another image." }
   }
+  console.log(7);
   callSendAPI(sender_psid, response);
+  console.log(8);
 }
 
 function callSendAPI(sender_psid, response) {
@@ -175,6 +179,9 @@ function callSendAPI(sender_psid, response) {
     "message": response
   }
 
+  console.log(request_body);
+  
+  
   // Send the HTTP request to the Messenger Platform
   request({
     "uri": "https://graph.facebook.com/v2.6/me/messages",
