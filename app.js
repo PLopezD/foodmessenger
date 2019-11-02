@@ -79,12 +79,9 @@ function handleMessage(sender_psid, received_message) {
     console.log("NLP: ", JSON.stringify(received_message.nlp));
   }
   let currentUser = userDB[sender_psid];
-  console.log(currentUser);
-  if(currentUser){
-    console.log(currentUser['type'])
-  }
-  
   if(currentUser && currentUser['type'] == 'PROVIDER' && currentUser['stepType']== 'food'){
+    //arp
+    providerDB[sender_psid] = {foodDesc: received_message.text ,location: ""};
     console.log("Provider is in food step");
   }
   if (received_message.text) {
@@ -108,6 +105,7 @@ function handleMessage(sender_psid, received_message) {
   } 
 
   console.log(userDB);
+  console.log(providerDB);
   
   // Send the response message
   callSendAPI(sender_psid, response);    
