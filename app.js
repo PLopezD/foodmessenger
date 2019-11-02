@@ -109,6 +109,7 @@ function handleMessage(sender_psid, received_message) {
     providerDetails['location'] = received_message.text;
     console.log("Provider is in location step");
     response = generateCarouselForDropoffs();
+
     currentUser['stepType'] = 'finish';
     userDB[sender_psid] = currentUser;
   }
@@ -123,6 +124,7 @@ function handleMessage(sender_psid, received_message) {
       }
     } else {
       response = generateCarousel();
+      callSendAPI(sender_psid, {"text": `These are the available food pickup locations nearby. Please visit at your convenience.`})
     }
     
 
@@ -245,11 +247,11 @@ function userTypeSelected(type, psid) {
 function generateQuickReplies() {
   let quickReplies = [
     {
-      title:"Seeker",
+      title:"I am a food seeker",
       payload: "SEEKER"
     },
     {
-      title:"Provider",
+      title:"I am a food provider",
       payload: "PROVIDER"
     }
   ]
@@ -266,10 +268,11 @@ function generateCarousel() {
       }
     }
   }
+
   _.forEach(providerDB, item => {
     let foodItem = {
       "title": item.foodDesc,
-      "image_url":"https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "image_url": "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
       "subtitle":`${item.location} - ${_.random(1, 5)} miles`
     }
     returnObj.attachment.payload.elements.push(foodItem)
