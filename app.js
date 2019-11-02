@@ -104,6 +104,8 @@ function handleMessage(sender_psid, received_message) {
   }
 
   if (received_message && received_message.quick_reply && received_message.quick_reply.payload === 'SEEKER') {
+    console.log("xxxx");
+    
     response = startSeekerFlow()
   } 
 
@@ -137,10 +139,6 @@ function callSendAPI(sender_psid, response) {
     },
     "message": response
   }
-
-  console.log(request_body);
-  
-  
   // Send the HTTP request to the Messenger Platform
   request({
     "uri": "https://graph.facebook.com/v2.6/me/messages",
