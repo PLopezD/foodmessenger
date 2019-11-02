@@ -134,8 +134,9 @@ function handleMessage(sender_psid, received_message) {
     }
   }
 
-  console.log(userDB);
-  console.log(providerDB);
+  console.log("UserDB : " , userDB);
+  console.log("ProviderDB : ",providerDB);
+  console.log("SeekerDB : ",seekerDB);
   
   // Send the response message
   callSendAPI(sender_psid, response);    
