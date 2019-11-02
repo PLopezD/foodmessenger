@@ -155,9 +155,7 @@ function handlePostback(sender_psid, received_postback) {
         payload: "PROVIDER"
       }
     ]
-    let response = genQuickReply("What are you?", quickReplies);
-    console.log(6);
-    
+    response = genQuickReply("What are you?", quickReplies);
   }
 
   if (payload === 'yes') {
@@ -165,9 +163,7 @@ function handlePostback(sender_psid, received_postback) {
   } else if (payload === 'no') {
     response = { "text": "Oops, try sending another image." }
   }
-  console.log(7);
   callSendAPI(sender_psid, response);
-  console.log(8);
 }
 
 function callSendAPI(sender_psid, response) {
@@ -189,8 +185,6 @@ function callSendAPI(sender_psid, response) {
     "method": "POST",
     "json": request_body
   }, (err, res, body) => {
-    console.log(res);
-    
     if (!err) {
       console.log('message sent!')
     } else {
