@@ -278,8 +278,9 @@ function generateCarousel() {
 }
 
 function generateCarouselForDropoffs() {
-  let returnObj = {
+  return {
     "attachment":{
+      "text": "There are 12 people in your neighborhood who are actively in need of food. These are your dropoff locations.",
       "type":"template",
       "payload":{
         "template_type":"generic",
@@ -287,12 +288,12 @@ function generateCarouselForDropoffs() {
           {
             "title": "Sears tower",
             "image_url":"https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-            "subtitle":`${item.location} - ${_.random(1, 5)} miles`
+            "subtitle":`${_.random(1, 5)} miles away`
           }, 
           {
           "title": "Millenium park",
           "image_url":"http://s3.amazonaws.com/architecture-org/files/buildings/willis-tower-sears-tower-01-ear-2.jpg",
-          "subtitle":`${item.location} - ${_.random(1, 5)} miles`
+          "subtitle":`${_.random(1, 5)} miles away`
           }
         ]
       }
