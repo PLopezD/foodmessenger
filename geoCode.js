@@ -25,7 +25,7 @@ function geoDecode(x) {
 }
 
 function getLocation(locationOne, locationTwo) {
-    cArray = [];
+    let cArray = [];
     cArray.push(geoDecode(locationOne), geoDecode(locationTwo))
     Promise.all(cArray).then(res => {
         console.log("Response is : ",res);
