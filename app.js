@@ -145,16 +145,24 @@ function handlePostback(sender_psid, received_postback) {
   // Set the response based on the postback payload
   if (payload === "GET_STARTED") {
     console.log(12345);
-    response = {
-      "text": `GETTING STARTED FLOW GOES HERE`
-    }
+    let buttons = [
+      {
+        title:"Seeker",
+        payload: "SEEKER"
+      },
+      {
+        title:"Provider",
+        payload: "PROVIDER"
+      }
+    ]
+    let response = genQuickReply("What are you?", buttons)
   }
+
   if (payload === 'yes') {
     response = { "text": "Thanks!" }
   } else if (payload === 'no') {
     response = { "text": "Oops, try sending another image." }
   }
-  // Send the message to acknowledge the postback
   callSendAPI(sender_psid, response);
 }
 
@@ -182,4 +190,22 @@ function callSendAPI(sender_psid, response) {
       console.error("Unable to send message:" + err);
     }
   }); 
+}
+
+
+function genQuickReply(text, quickReplies) {
+  let response = {
+    text: text,
+    quick_replies: []
+  };
+
+  for (let quickReply of quickReplies) {
+    response["quick_replies"].push({
+      content_type: "text",
+      title: quickReply["title"],
+      payload: quickReply["payload"]
+    });
+  }
+
+  return response;
 }
