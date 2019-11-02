@@ -269,10 +269,17 @@ function generateCarousel() {
     }
   }
 
-  _.forEach(providerDB, item => {
+  _.forEach(providerDB, (item, index) => {
+    let image_url = "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+    if (index == 0 ) {
+      image_url = "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&w=1000&q=80"
+    }
+    if (index == 1 ) {
+      image_url = "https://i0.wp.com/images-prod.healthline.com/hlcmsresource/images/AN_images/are-bagels-vegan-1296x728-feature.jpg"
+    }
     let foodItem = {
       "title": item.foodDesc,
-      "image_url": "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "image_url": image_url,
       "subtitle":`${item.location} - ${_.random(1, 5)} miles`
     }
     returnObj.attachment.payload.elements.push(foodItem)
