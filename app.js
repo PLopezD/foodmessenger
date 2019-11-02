@@ -101,7 +101,7 @@ function handleMessage(sender_psid, received_message) {
   //Seeker in location step
   if(currentUser && currentUser['type'] == 'SEEKER' && currentUser['stepType']== 'location'){
     //arp
-    providerDB[sender_psid] = {location: received_message.text};
+    seekerDB[sender_psid] = {location: received_message.text};
     response = {
       "text": `Thankyou for providing your location !`
     }
