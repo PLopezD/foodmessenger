@@ -133,11 +133,7 @@ function handlePostback(sender_psid, received_postback) {
     ]
     response = genQuickReply("What are you?", quickReplies);
   }
-
-  if (payload === 'SEEKER') {
-    response = startSeekerFlow()
-  } 
-
+  
   callSendAPI(sender_psid, response);
 }
 
