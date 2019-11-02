@@ -257,7 +257,7 @@ function generateQuickReplies() {
       payload: "PROVIDER"
     }
   ]
-  return genQuickReply("What are you?", quickReplies)
+  return genQuickReply("How would you describe yourself ?", quickReplies)
 }
 
 function generateCarousel() {
