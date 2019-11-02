@@ -125,7 +125,7 @@ function handlePostback(sender_psid, received_postback) {
   console.log(payload);
   // Set the response based on the postback payload
   if (payload === "GET_STARTED") {
-    startFlow();
+    response = startFlow();
   }
 
   callSendAPI(sender_psid, response);
