@@ -38,4 +38,5 @@ function getLocation(locationOne, locationTwo) {
     })
 }
 
-export default getLocation
+module.exports = getLocation
+
