@@ -38,4 +38,4 @@ function getLocation(locationOne, locationTwo) {
     })
 }
 
-return getLocation
+export default getLocation
