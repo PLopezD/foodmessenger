@@ -1,5 +1,6 @@
 'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
+let _ = require('lodash');
 let userDB = {}
 let providerDB ={}
 let seekerDB = {}
@@ -104,7 +105,7 @@ function handleMessage(sender_psid, received_message) {
     seekerDB[sender_psid] = {location: received_message.text};
     if(Object.keys(providerDB).length == 0){
       response = {
-      "text": `Thankyou for providing your location ! Currently there are no food providers available ! `
+        "text": `Thank you for providing your location! Currently there are no food providers available!`
       }
     } else {
       response = generateCarousel();
@@ -241,44 +242,28 @@ function generateQuickReplies() {
 }
 
 function generateCarousel() {
-  return {
+  let returnObj = {
     "attachment":{
       "type":"template",
       "payload":{
         "template_type":"generic",
         "elements":[
-           {
-            "title":"Pizza",
-            "image_url":"https://www.qsrmagazine.com/sites/default/files/styles/story_page/public/PizzaHut.jpg",
-            "subtitle":"We have the right hat for everyone.",
-            "default_action": {
-              "type": "web_url",
-              "url": "https://petersfancybrownhats.com/view?item=103",
-              "webview_height_ratio": "tall",
-            }
-          },
-          {
-            "title":"Hot dog",
-            "image_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hotdog_-_Evan_Swigart.jpg/1200px-Hotdog_-_Evan_Swigart.jpg",
-            "subtitle":"We have the right hat for everyone.",
-            "default_action": {
-              "type": "web_url",
-              "url": "https://petersfancybrownhats.com/view?item=103",
-              "webview_height_ratio": "tall",
-            }
-          },
-          {
-            "title":"Pizza",
-            "image_url":"https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-            "subtitle":"We have the right hat for everyone.",
-            "default_action": {
-              "type": "web_url",
-              "url": "https://petersfancybrownhats.com/view?item=103",
-              "webview_height_ratio": "tall",
-            }
-          }
         ]
       }
     }
   }
+  _.forEach(item => {
+    let footItem = {
+      "title": item.foodDesc,
+      "image_url":"https://www.qsrmagazine.com/sites/default/files/styles/story_page/public/PizzaHut.jpg",
+      "subtitle":`${item.location} - ${_.random(1, 5)} miles`,
+      "default_action": {
+        "type": "web_url",
+        "url": "https://petersfancybrownhats.com/view?item=103",
+        "webview_height_ratio": "tall",
+      }
+    }
+    returnObj.attachment.payload.elements.push(footItem)
+  })
+  return returnObj
 }
