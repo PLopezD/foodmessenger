@@ -2,6 +2,7 @@
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 let _ = require('lodash');
 let getLocation = require('./geoCode');
+let
 
 
 let userDB = {}
@@ -36,6 +37,7 @@ app.post('/webhook', (req, res) => {
     body.entry.forEach(function(entry) {
       let webhook_event = entry.messaging[0];
       let sender_psid = webhook_event.sender.id;
+      console.log("SENDER DET" ,webhook_event.sender);
       console.log('Sender ID: ' + sender_psid);
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
