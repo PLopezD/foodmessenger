@@ -104,8 +104,8 @@ function handleMessage(sender_psid, received_message) {
       "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
     }
   }
-  
-  if (received_message.payload === 'SEEKER') {
+
+  if (received_message.quick_reply.payload === 'SEEKER') {
     response = startSeekerFlow()
   } 
   // Send the response message
