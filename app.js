@@ -102,8 +102,9 @@ app.get('/webhook', (req, res) => {
 function handleMessage(sender_psid, received_message) {
   let response;
   // Checks if the message contains text
-  console.log("received_message", received_message);
-  if (received_message.payload === "GET_STARTED") {
+  console.log("RECEIVED!!!!", received_message);
+  console.log(received_message.postback.payload);
+  if (received_message.postback.payload === "GET_STARTED") {
     console.log(12345);
     response = {
       "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
