@@ -97,6 +97,18 @@ function handleMessage(sender_psid, received_message) {
     currentUser['stepType'] = 'finish';
     userDB[sender_psid] = currentUser;
   }
+
+  //Seeker in location step
+  if(currentUser && currentUser['type'] == 'SEEKER' && currentUser['stepType']== 'location'){
+    //arp
+    providerDB[sender_psid] = {location: received_message.text};
+    response = {
+      "text": `Thankyou for providing your location !`
+    }
+    currentUser['stepType'] = 'finish';
+    userDB[sender_psid] = currentUser;
+  } 
+
   // if (received_message.text) {
   //   response = {
   //     "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
