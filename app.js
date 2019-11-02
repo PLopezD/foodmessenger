@@ -1,15 +1,18 @@
 'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 let _ = require('lodash');
+let getLocation = require('./geoCode');
+
+
 let userDB = {}
 let providerDB = {
   1234: {
     foodDesc: "3 pizzas", 
-    location: "22 wacker"
+    location: "201 E Randolph Street Chicago, IL"
   },
   4567: {
     foodDesc: "20 bagels", 
-    location: "88 division"
+    location: "233 S Wacker Dr, Chicago, IL"
   }
 }
 let seekerDB = {}
@@ -82,7 +85,10 @@ app.get('/webhook', (req, res) => {
 });
 
 function handleMessage(sender_psid, received_message) {
-  let response;
+  let response; 
+  if (received_message == 'geolocate') {
+    getLocation("201 E Randolph Street Chicago, IL", "233 S Wacker Dr, Chicago, IL")
+  }
 
   console.log("MESSAGE: ", received_message);
   let currentUser = userDB[sender_psid];
@@ -117,10 +123,9 @@ function handleMessage(sender_psid, received_message) {
         "text": `Thank you for providing your location! Currently there are no food providers available!`
       }
     } else {
-      console.log("before");
       response = generateCarousel();
-      console.log("after", response);
     }
+    
 
     currentUser['stepType'] = 'finish';
     userDB[sender_psid] = currentUser;
