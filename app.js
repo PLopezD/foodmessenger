@@ -138,13 +138,13 @@ function handleMessage(sender_psid, received_message) {
 
 function handlePostback(sender_psid, received_postback) {
   console.log('ok')
-   let response;
+  let response;
   // Get the payload for the postback
   let payload = received_postback.payload;
   console.log(payload);
   // Set the response based on the postback payload
-  if (payload === "GET_STARTED") {
-    console.log(12345);
+  let commonGreetings = ["hi", "hello", "hey"]
+  if (payload === "GET_STARTED" || commonGreetings.indexOf(payload.toLowerCase()) >=  0) {
     let quickReplies = [
       {
         title:"Seeker",
