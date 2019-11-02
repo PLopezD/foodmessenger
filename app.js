@@ -158,10 +158,10 @@ function handlePostback(sender_psid, received_postback) {
     response = genQuickReply("What are you?", quickReplies);
   }
 
-  if (payload === 'yes') {
-    response = { "text": "Thanks!" }
-  } else if (payload === 'no') {
-    response = { "text": "Oops, try sending another image." }
+  if (payload === 'SEEKER') {
+    response = startSeekerFlow()
+  } else {
+    response = { "text": "We don't understand!" }
   }
   callSendAPI(sender_psid, response);
 }
@@ -208,5 +208,10 @@ function genQuickReply(text, quickReplies) {
     });
   }
 
+  return response;
+}
+
+function startSeekerFlow() {
+  let response = { "text": "You are a seeker!" }
   return response;
 }
