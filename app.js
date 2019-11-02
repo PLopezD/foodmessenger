@@ -72,7 +72,7 @@ function handleMessage(sender_psid, received_message) {
   let response;
   console.log("MESSAGE: ", received_message);
   if (received_message.nlp) {
-    console.log("NLP: ", received_message.nlp.entities.sentiment);
+    console.log("NLP: ", JSON.stringify(received_message.nlp));
   }
   if (received_message.text) {
     response = {
